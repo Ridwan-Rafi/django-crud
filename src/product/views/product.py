@@ -27,14 +27,14 @@ class CreateProductView(generic.TemplateView):
 
 class ListProducts(BaseProductview, ListView):
     template_name = 'products/list.html'
-    paginated_by = 10
+    paginate_by = 3
 
     def get_queryset(self):
         filter_string = {}
         print("Products filter request: ",self.request.GET)
 
         for key in self.request.GET:
-            if self.request.GET.get(key):
+            if key!='page' and self.request.GET.get(key):
                 sql_key = key+'__icontains'
                 filter_string[sql_key] = self.request.GET.get(key)
         print("Filter string\n",**filter_string)
@@ -49,6 +49,6 @@ class ListProducts(BaseProductview, ListView):
         context['variants'] = list(variants.all())
         context['request'] = ''
         if self.request.GET:
-            context['request'] = self.request.GET['title']
+            context['request'] = self.request.GET.get('title', '')
         print("Product context['request'] = ", context['request'])
         return context

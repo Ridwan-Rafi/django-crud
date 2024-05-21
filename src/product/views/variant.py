@@ -14,12 +14,12 @@ class BaseVariantView(generic.View):
 
 class VariantView(BaseVariantView, ListView):
     template_name = 'variants/list.html'
-    paginate_by = 5
+    paginate_by = 2
 
     def get_queryset(self):
         filter_string = {}
         for key in self.request.GET:
-            if self.request.GET.get(key):
+            if ((key != 'page') and self.request.GET.get(key)):
                 filter_string[key] = self.request.GET.get(key)
         return Variant.objects.filter(**filter_string)
 
@@ -28,7 +28,7 @@ class VariantView(BaseVariantView, ListView):
         context['product'] = True
         context['request'] = ''
         if self.request.GET:
-            context['request'] = self.request.GET['title__icontains']
+            context['request'] = self.request.GET.get('title__icontains','')
         return context
 
 
