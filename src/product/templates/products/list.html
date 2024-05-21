@@ -8,16 +8,18 @@
     <h1 class="h3 mb-0 text-gray-800">Products</h1>
 </div>
 
-
 <div class="card">
-    <form action="" method="get" class="card-header">
+    <form action="?" method="get" class="card-header">
         <div class="form-row justify-content-between">
             <div class="col-md-2">
-                <input type="text" name="title" placeholder="Product Title" class="form-control">
+                <input type="text" name="title" value="{{ request }}" placeholder="Product Title" class="form-control">
             </div>
             <div class="col-md-2">
                 <select name="variant" id="" class="form-control">
                     <option selected disabled>--Select A Variant--</option>
+                    {% for var in variants%}
+                    <option>{{var.title}}</option>
+                    {% endfor %}
 
                 </select>
             </div>
@@ -55,6 +57,18 @@
                 </thead>
 
                 <tbody>
+                    {% for item in product_list %}
+                        <tr>
+                            <td>
+                                <p>{{item.id}}</p>
+                                <p>{{item.created_at}}</p>
+                            </td>
+                            <td>{{item.title}}</td>
+                            <td>{{item.description}}</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {% endfor %}
                 <tr>
                     <td>1</td>
                     <td>T-Shirt <br> Created at : 25-Aug-2020</td>

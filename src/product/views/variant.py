@@ -14,11 +14,10 @@ class BaseVariantView(generic.View):
 
 class VariantView(BaseVariantView, ListView):
     template_name = 'variants/list.html'
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         filter_string = {}
-        print(self.request.GET)
         for key in self.request.GET:
             if self.request.GET.get(key):
                 filter_string[key] = self.request.GET.get(key)
