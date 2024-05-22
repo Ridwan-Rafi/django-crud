@@ -57,16 +57,32 @@
                 </thead>
 
                 <tbody>
-                    {% for item in product_list %}
+                    {% for product in products %}
                         <tr>
+                            <td>{{product.id}}</td>
+                            <td>{{product.title}} <br> Created at : {{product.created_at}}</td>
+                            <td>{{product.description}}</td>
                             <td>
-                                <p>{{item.id}}</p>
-                                <p>{{item.created_at}}</p>
+                                <dl class="row mb-0" style="height: 80px; overflow: hidden" id="variant{{product.id}}">
+                                    {% for pvp in product.productvariantprice_set.all %}
+                                    <dt class="col-sm-3 pb-0">
+                                        {{ pvp.product_variant_one.variant_title }} / 
+                                        {{ pvp.product_variant_two.variant_title }} / 
+                                        {{ pvp.product_variant_three.variant_title }}
+                                    </dt>
+                                    <dd class="col-sm-9">
+                                        <dl class="row mb-0">
+                                            <dd class="col-sm-4 pb-0">Price : {{ pvp.price }}</dd>
+                                            <dd class="col-sm-8 pb-0">InStock : {{ pvp.stock }}</dd>
+                                        </dl>
+                                    </dd>
+                                    {% endfor %}                                
+                                </dl>
+                            <button onclick="$('#variant{{product.id}}').toggleClass('h-auto')" class="btn btn-sm btn-link">Show more
+                            </button>
                             </td>
-                            <td>{{item.title}}</td>
-                            <td>{{item.description}}</td>
-                            <td></td>
-                            <td></td>
+                            <td>
+                            </td>
                         </tr>
                     {% endfor %}
                 <tr>
