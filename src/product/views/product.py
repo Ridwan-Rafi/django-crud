@@ -2,6 +2,7 @@ from django.views import generic
 from django.views.generic import ListView
 from django.shortcuts import render
 
+from product.models import ProductVariant
 from product.models import Variant
 from product.models import Product
 from product.models import ProductVariantPrice
@@ -33,12 +34,10 @@ class ListProducts(BaseProductview, ListView):
     def get_queryset(self):
         filter_string = {}
         print("Products filter request: ", self.request.GET)
-
         for key in self.request.GET:
-            if key != 'page' and self.request.GET.get(key):
-                sql_key = key + '__icontains'
-                filter_string[sql_key] = self.request.GET.get(key)
-        print("Filter string\n", str(filter_string))
+               if key != 'page' and self.request.GET.get(key):
+                   sql_key = key + '__icontains'
+               filter_string[sql_key] = self.request.GET.get(key)
         queryset = Product.objects.filter(**filter_string).prefetch_related('productvariantprice_set__product_variant_one', 'productvariantprice_set__product_variant_two', 'productvariantprice_set__product_variant_three')
         return queryset
         # filter_string = {}
@@ -59,12 +58,14 @@ class ListProducts(BaseProductview, ListView):
                 sql_key = key + '__icontains'
                 filter_string[sql_key] = self.request.GET.get(key)
         products = Product.objects.filter(**filter_string).prefetch_related('productvariantprice_set__product_variant_one', 'productvariantprice_set__product_variant_two', 'productvariantprice_set__product_variant_three')
-        variants = Variant.objects.filter(active=True).values('id', 'title')
+        variants = Variant.objects.filter(active=True)
+        variantsData = ProductVariant.objects.filter(variant__active=True).values('variant_title', 'variant_id').distinct()
 
         context['product'] = True
         page_number = int(self.request.GET.get('page', 0))
         context['products'] = products[page_number * self.paginate_by:(page_number + 1) * self.paginate_by]
         context['variants'] = list(variants.all())
+        context['variantsData'] = list(variantsData.all())
         context['request'] = ''
         if self.request.GET:
             context['request'] = self.request.GET.get('title', '')

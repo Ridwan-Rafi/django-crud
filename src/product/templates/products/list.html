@@ -18,7 +18,12 @@
                 <select name="variant" id="" class="form-control">
                     <option selected disabled>--Select A Variant--</option>
                     {% for var in variants%}
-                    <option>{{var.title}}</option>
+                    <option disabled>{{var.title}}</option>
+                        {% for data in variantsData %}
+                            {% if var.id == data.variant_id%}
+                                <option>--{{data.variant_title}}</option>
+                            {% endif %}
+                        {% endfor %}
                     {% endfor %}
 
                 </select>
